@@ -1,0 +1,34 @@
+# Container tests
+
+Mini test suite to test that Quarkus and its use of containers (build image and devservices) works as expected.
+
+## Approach
+
+Idea is to have set of (small) projects that can be used to test the container support in Quarkus
+and do the following operation in each:
+
+- `quarkus dev` to start dev mode and verify it will be able to respond on some endpoint massaging the suggested service
+- hot-reload while `quarkus dev` runs trigger a hotreload and see things continue to work
+- `./mvnw install -DskipTests -Dnative -Dquarkus.native.container-build=true -Dquarkus.native.container-runtime=xxx` where `xxx` is the container runtime to use (`docker` or `podman`)
+
+## Requirements
+
+- `jbang` in the `PATH`
+- `quarkus` in the `PATH`
+- container runtime wether podman or docker in PATH
+
+## Harness
+
+You can run `test.java` standalone and it will create a `postgres` directory with a default minimal setup.
+
+You can also run `test.java -d postgres,kafka,kubernets` to have it created the required directories for those services.
+
+If you add another directory it will fail if that dir does not exist; but will run it as if its an additional harness.
+
+## cleanup 
+
+on osx:
+
+for testing installer i usually do rm -rf /opt/podman and brew uninstall  podman brew uninsall qemu --ignore-dependecies (you might want to install qemu again, if you have other tools from brew depending on it, i use lima sometimes which needs qemu from brew so i'll reinstall it again after the test)
+
+delete testcontainers: ❯ docker stop `docker ps -q -f label=org.testcontainers`
