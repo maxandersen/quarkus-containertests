@@ -2,6 +2,8 @@
 
 Mini test suite to test that Quarkus and its use of containers (build image and devservices) works as expected.
 
+Very much a work in progress.
+
 ## Approach
 
 Idea is to have set of (small) projects that can be used to test the container support in Quarkus
@@ -25,10 +27,14 @@ You can also run `test.java -d postgres,kafka,kubernets` to have it created the 
 
 If you add another directory it will fail if that dir does not exist; but will run it as if its an additional harness.
 
-## cleanup 
+## cleanup notes
 
 on osx:
 
 for testing installer i usually do rm -rf /opt/podman and brew uninstall  podman brew uninsall qemu --ignore-dependecies (you might want to install qemu again, if you have other tools from brew depending on it, i use lima sometimes which needs qemu from brew so i'll reinstall it again after the test)
 
 delete testcontainers: ❯ docker stop `docker ps -q -f label=org.testcontainers`
+
+remove data:
+ for i in `podman machine ls --format {{.Name}} | xargs`; do podman machine rm -f $i; done
+
